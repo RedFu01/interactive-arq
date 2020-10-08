@@ -1,0 +1,283 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Popup Store
+Parameters:
+  Stage:
+    Description: Stage of the Service (Sandbox, Staging, Production)
+    Type: String
+    AllowedValues:
+      - SANDBOX
+      - STAGING
+      - PRODUCTION
+  GitHubOauthToken:
+    Type: String
+    NoEcho: true
+  GitHubRepoOwner:
+    Type: String
+    Default: pioverzero
+  GitHubRepoName:
+    Type: String
+    Default: omnet-lense-client
+  GitHubRepoBranch:
+    Type: String
+    Default: master
+  BucketName:
+    Type: String
+    Default: omnet-lense-client-production
+  ArtifactStoreBucket:
+    Type: String
+    Default: skyhigh-build-artifacts
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+  DNSName:
+    Default: www.omnetlense.com
+    Type: String
+  AcmCertificateArn:
+    Description: ACM Certificate ARN (Change it if you have a different DNS name)
+    Type: String
+    Default: arn:aws:acm:us-east-1:113971180348:certificate/16a0a72a-266a-4886-a1ed-c96a24376567
+  EscalationEmail:
+    Type: String
+    Default: k.fuger@tuhh.de
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Source-Code Configurations
+        Parameters:
+          - GitHubRepoOwner
+          - GitHubRepoName
+          - GitHubRepoBranch
+          - GitHubOauthToken
+      - Label:
+          default: CI/CD Configurations
+        Parameters:
+          - BucketName
+          - ArtifactStoreBucket
+      - Label:
+          default: Monitoring Configurations
+        Parameters:
+          - EscalationEmail
+Resources:
+  EscalationTopic:
+    Type: AWS::SNS::Topic
+
+  EscalationTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref EscalationTopic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: '*'
+            Action: sns:Publish
+            Resource: !Ref EscalationTopic
+
+  EscalationEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref EscalationEmail
+      Protocol: email
+      TopicArn: !Ref EscalationTopic
+
+  PipelineTrustRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess # change this!!!
+
+  BuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess # change this!!!
+
+  CloudFormationTrustRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: cloudformation.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess # change this!!!
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt PipelineTrustRole.Arn
+      ArtifactStore:
+        Location: !Ref ArtifactStoreBucket
+        Type: S3
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubRepoOwner
+                Repo: !Ref GitHubRepoName
+                Branch: !Ref GitHubRepoBranch
+                OAuthToken: !Ref GitHubOauthToken
+              InputArtifacts: []
+              OutputArtifacts:
+                - Name: SourceOutput
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Build
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref Build
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              RunOrder: 1
+        - Name: Deploy
+          Actions:
+            - Name: Prepare-Infrastructure
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                Capabilities: CAPABILITY_IAM
+                StackName: !Sub ${AWS::StackName}-App
+                RoleArn: !GetAtt CloudFormationTrustRole.Arn
+                TemplatePath: BuildOutput::infrastructure.yml
+                ParameterOverrides:
+                    !Sub |
+                      {
+                        "BucketName": "${BucketName}",
+                        "HostedZoneId": "${HostedZoneId}",
+                        "DNSName": "${DNSName}",
+                        "AcmCertificateArn": "${AcmCertificateArn}"
+                      }
+              InputArtifacts:
+                - Name: BuildOutput
+              OutputArtifacts: []
+              RunOrder: 1
+            - Name: Deploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref Deploy
+              InputArtifacts:
+                - Name: BuildOutput
+              OutputArtifacts: []
+              RunOrder: 2
+
+  Build:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/nodejs:10.14.1
+        Type: LINUX_CONTAINER
+      Name: !Sub ${AWS::StackName}-Build
+      ServiceRole: !Ref BuildRole
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec:
+          !Sub
+            - |
+              version: 0.2
+              env:
+                variables:
+                  STAGE: ${Stage}
+              phases:
+                build:
+                  commands:
+                    - npm install
+                    - npm run build
+              artifacts:
+                files:
+                  - './infrastructure.yml'
+                  - './scripts/infrastructure/createInvalidation.js'
+                  - './dist/**/*'
+                  - './node_modules/**/*'
+            - {}
+
+
+
+  Deploy:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/nodejs:10.14.1
+        Type: LINUX_CONTAINER
+      Name: !Sub ${AWS::StackName}-Deploy
+      ServiceRole: !Ref BuildRole
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec:
+          !Sub |
+            version: 0.2
+            phases:
+              build:
+                commands:
+                  - aws s3 sync ./dist/ s3://${BucketName} --delete
+                  - aws s3 cp ./dist/index.html s3://${BucketName}/index.html --cache-control "public, must-revalidate, proxy-revalidate, max-age=0"
+                  - node ./scripts/infrastructure/createInvalidation ${AWS::StackName}-App
+
+  PipelineFailedAlarm:
+    Type: AWS::Events::Rule
+    Properties:
+      EventPattern:
+        source:
+          - aws.codepipeline
+        detail-type:
+          - CodePipeline Pipeline Execution State Change
+        detail:
+          state:
+            - FAILED
+          pipeline:
+            - !Ref Pipeline
+      State: ENABLED
+      Targets:
+        - Id: PipelineFailedAlarm
+          Arn: !Ref EscalationTopic
+          InputTransformer:
+            InputPathsMap:
+              region: $.region
+              pipeline: $.detail.pipeline
+              state: $.detail.state
+            InputTemplate: '"The state of Pipeline <pipeline> is <state>. Go to https://console.aws.amazon.com/codepipeline/home?region=<region>#/view/<pipeline>"'

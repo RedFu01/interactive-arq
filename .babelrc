@@ -1,0 +1,27 @@
+{
+    "presets": [
+        "env",
+        "react",
+        "stage-0"
+    ],
+    "plugins": [
+        "transform-class-properties",
+        "transform-runtime"
+    ],
+    "env": {
+        "server": {
+            "plugins": [
+                "transform-class-properties",
+                "transform-runtime",
+                [
+                    "css-modules-transform",
+                    {
+                        "extensions": [
+                            ".scss"
+                        ]
+                    }
+                ]
+            ]
+        }
+    }
+}

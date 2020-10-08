@@ -1,0 +1,12 @@
+.c-message-sequence-chart {
+    position: relative;
+}
+
+.c-message-sequence-chart__fade {
+    height: 100px;
+    background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,1) 80%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
