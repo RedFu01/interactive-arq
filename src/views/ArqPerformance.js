@@ -37,7 +37,7 @@ export default class ArqPerformance extends React.Component {
             n: 100,
             n_h: 10,
             T_p: 0.01,
-            T_process: 0.001,
+            T_process: 0.01,
             T_x_ACK: 0.005
         };
 

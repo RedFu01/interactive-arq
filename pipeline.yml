@@ -13,23 +13,23 @@ Parameters:
     NoEcho: true
   GitHubRepoOwner:
     Type: String
-    Default: pioverzero
+    Default: RedFu01
   GitHubRepoName:
     Type: String
-    Default: omnet-lense-client
+    Default: interactive-arq
   GitHubRepoBranch:
     Type: String
     Default: master
   BucketName:
     Type: String
-    Default: omnet-lense-client-production
+    Default: interactive-arq-production
   ArtifactStoreBucket:
     Type: String
     Default: skyhigh-build-artifacts
   HostedZoneId:
     Type: AWS::Route53::HostedZone::Id
   DNSName:
-    Default: www.omnetlense.com
+    Default: arq.omnetlense.com
     Type: String
   AcmCertificateArn:
     Description: ACM Certificate ARN (Change it if you have a different DNS name)
