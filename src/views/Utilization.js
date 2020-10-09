@@ -180,7 +180,7 @@ export default class ArqPerformance extends React.Component {
                                     onChange={(_, v) => this.setValue('T_x_ACK', v)}
                                 />
                             </Grid>
-                            {/* <Grid item xs={8}>
+                            <Grid item xs={8}>
                                 <Chart
                                     dataSource={this.getData()}
                                     title="Utilization of ARQ Methods"
@@ -210,8 +210,8 @@ export default class ArqPerformance extends React.Component {
                                     />
                                     <Legend visible={true} />
                                 </Chart>
-                            </Grid> */}
-                            <Grid item xs={12}>
+                            </Grid>
+                            <Grid item xs={4}>
                                 {!this.state.loading && <MessageSequenceChart
                                     {...this.state}
                                 />}
