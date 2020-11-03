@@ -102,116 +102,97 @@ export default class ArqPerformance extends React.Component {
                 <Paper elevation={3}>
                     <div style={{ padding: '2rem' }}>
                         <Grid container spacing={3}>
-                            <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#3F88C5'}}>n</span>
-                                </Typography>
-                                <Slider
-                                    step={1}
-                                    min={100}
-                                    max={200}
-                                    defaultValue={n}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('n', v)}
-                                />
+                            <Grid item xs={8}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h4" gutterBottom>
+                                            Channel utilization of Stop-and-Wait ARQ
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Segment Length [bit]<br/><span style={{ color: '#3F88C5' }}>n<sub>&nbsp;</sub></span>
+                                        </Typography>
+                                        <Slider
+                                            step={1}
+                                            min={100}
+                                            max={200}
+                                            defaultValue={n}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('n', v)}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Header Length [bit]<br/><span style={{ color: '#FFD338' }}>n<sub>h</sub></span>
+                                        </Typography>
+                                        <Slider
+                                            step={1}
+                                            min={0}
+                                            max={50}
+                                            defaultValue={n_h}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('n_h', v)}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Transmission Rate [bit/s]<br/>R<sub>&nbsp;</sub>
+                                        </Typography>
+                                        <Slider
+                                            step={1}
+                                            min={1000}
+                                            max={4000}
+                                            defaultValue={R}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('R', v)}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Propagation Delay [s]<br/>
+                                            <span style={{ color: '#40C9A2' }}>T<sub>p</sub></span>
+                                        </Typography>
+                                        <Slider
+                                            step={0.01}
+                                            min={0}
+                                            max={0.3}
+                                            defaultValue={T_p}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('T_p', v)}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Processing Delay [s] <br/>
+                                            <span style={{ color: '#C5CBD3' }}>T<sub>process</sub></span>
+                                        </Typography>
+                                        <Slider
+                                            step={0.001}
+                                            min={0}
+                                            max={0.01}
+                                            defaultValue={T_process}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('T_process', v)}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography id="discrete-slider" gutterBottom>
+                                            Acknowledgement Delay [s]<br/>
+                                            <span style={{ color: '#DE3C4B' }}>T<sub>x, ACK</sub></span>
+                                        </Typography>
+                                        <Slider
+                                            step={0.005}
+                                            min={0}
+                                            max={0.1}
+                                            defaultValue={T_x_ACK}
+                                            valueLabelDisplay="auto"
+                                            onChange={(_, v) => this.setValue('T_x_ACK', v)}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                             <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#FFD338'}}>n_h</span>
-                                </Typography>
-                                <Slider
-                                    step={1}
-                                    min={0}
-                                    max={50}
-                                    defaultValue={n_h}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('n_h', v)}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    R
-                                </Typography>
-                                <Slider
-                                    step={1}
-                                    min={1000}
-                                    max={4000}
-                                    defaultValue={R}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('R', v)}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{ color: '#40C9A2' }}>T_p</span>
-                                </Typography>
-                                <Slider
-                                    step={0.01}
-                                    min={0}
-                                    max={0.3}
-                                    defaultValue={T_p}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('T_p', v)}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#C5CBD3'}}>T_process</span>
-                                </Typography>
-                                <Slider
-                                    step={0.001}
-                                    min={0}
-                                    max={0.01}
-                                    defaultValue={T_process}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('T_process', v)}
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#DE3C4B'}}>T_x_ACK</span>
-                                </Typography>
-                                <Slider
-                                    step={0.005}
-                                    min={0}
-                                    max={0.1}
-                                    defaultValue={T_x_ACK}
-                                    valueLabelDisplay="auto"
-                                    onChange={(_, v) => this.setValue('T_x_ACK', v)}
-                                />
-                            </Grid>
-                            {/* <Grid item xs={8}>
-                                <Chart
-                                    dataSource={this.getData()}
-                                    title="Utilization of ARQ Methods"
-                                >
-                                    <CommonAxisSettings endOnTick={false} />
-                                    <ArgumentAxis
-                                        title="PER"
-                                    />
-                                    <ValueAxis
-                                        visualRange={[0, 1]}
-                                        title="Utilization"
-                                    />
-                                    <Series
-                                        name="Stop &amp; Wait ARQ"
-                                        valueField="y_saw"
-                                        argumentField="per"
-                                    />
-                                    <Series
-                                        name="Go-Back-N ARQ"
-                                        valueField="y_gbn"
-                                        argumentField="per"
-                                    />
-                                    <Series
-                                        name="Selective Repeat ARQ"
-                                        valueField="y_sr"
-                                        argumentField="per"
-                                    />
-                                    <Legend visible={true} />
-                                </Chart>
-                            </Grid> */}
-                            <Grid item xs={12}>
                                 {!this.state.loading && <MessageSequenceChart
                                     {...this.state}
                                 />}
