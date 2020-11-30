@@ -104,7 +104,7 @@ export default class ArqPerformance extends React.Component {
                         <Grid container spacing={3}>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#3F88C5'}}>n</span>
+                                    Segment Length [bit]<br /><span style={{ color: '#3F88C5' }}>n<sub>&nbsp;</sub></span>
                                 </Typography>
                                 <Slider
                                     step={1}
@@ -117,7 +117,7 @@ export default class ArqPerformance extends React.Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#FFD338'}}>n_h</span>
+                                    Header Length [bit]<br /><span style={{ color: '#FFD338' }}>n<sub>h</sub></span>
                                 </Typography>
                                 <Slider
                                     step={1}
@@ -130,7 +130,7 @@ export default class ArqPerformance extends React.Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    R
+                                    Transmission Rate [bit/s]<br />R<sub>&nbsp;</sub>
                                 </Typography>
                                 <Slider
                                     step={1}
@@ -143,7 +143,8 @@ export default class ArqPerformance extends React.Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{ color: '#40C9A2' }}>T_p</span>
+                                    Propagation Delay [s]<br />
+                                    <span style={{ color: '#40C9A2' }}>T<sub>p</sub></span>
                                 </Typography>
                                 <Slider
                                     step={0.01}
@@ -156,7 +157,8 @@ export default class ArqPerformance extends React.Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#C5CBD3'}}>T_process</span>
+                                    Processing Delay [s] <br />
+                                    <span style={{ color: '#C5CBD3' }}>T<sub>process</sub></span>
                                 </Typography>
                                 <Slider
                                     step={0.001}
@@ -169,7 +171,8 @@ export default class ArqPerformance extends React.Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <Typography id="discrete-slider" gutterBottom>
-                                    <span style={{color: '#DE3C4B'}}>T_x_ACK</span>
+                                    Acknowledgement Delay [s]<br />
+                                    <span style={{ color: '#DE3C4B' }}>T<sub>x, ACK</sub></span>
                                 </Typography>
                                 <Slider
                                     step={0.005}
