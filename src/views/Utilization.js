@@ -5,6 +5,7 @@ import Slider from '@material-ui/core/Slider';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Nav from '../components/Nav/Nav';
 
 import {
     Chart,
@@ -99,6 +100,8 @@ export default class ArqPerformance extends React.Component {
         } = this.initialState;
         return (
             <div style={{ margin: '2rem' }}>
+                <Nav />
+                <br />
                 <Paper elevation={3}>
                     <div style={{ padding: '2rem' }}>
                         <Grid container spacing={3}>

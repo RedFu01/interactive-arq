@@ -18,7 +18,7 @@ import {
     CommonAxisSettings,
 } from 'devextreme-react/chart';
 
-
+import Nav from '../components/Nav/Nav';
 import MessageSequenceChart from '../components/MessageSequenceChart/MessageSequenceChart';
 
 
@@ -99,6 +99,8 @@ export default class ArqPerformance extends React.Component {
         } = this.initialState;
         return (
             <div style={{ margin: '2rem' }}>
+                <Nav/>
+                <br />
                 <Paper elevation={3}>
                     <div style={{ padding: '2rem' }}>
                         <Grid container spacing={3}>
