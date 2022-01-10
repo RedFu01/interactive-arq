@@ -1,9 +1,8 @@
 import React from 'react';
-import { render } from 'react-dom';
 import {
     BrowserRouter as Router,
     Route,
-    Switch
+    Routes
 } from 'react-router-dom';
 
 import ArqPerformance from './views/ArqPerformance';
@@ -14,19 +13,13 @@ import './styles/app.scss';
 
 
 const App = () => (
-<Router>
-        <Switch>
-            <Route path="/" exact>
-                {props => <ArqPerformance />}
-            </Route>
-            <Route path="/arq" exact>
-                {props => <ArqPerformance />}
-            </Route>
-            <Route path="/utilization" exact>
-                {props => <Utilization />}
-            </Route>
-        </Switch>
+    <Router>
+        <Routes>
+            <Route path="/" element={<ArqPerformance />} />
+            <Route path="/arq" exact element={<ArqPerformance />} />
+            <Route path="/utilization" exact element={<Utilization />} />
+        </Routes>
     </Router>
 );
 
-render(<App />, document.getElementById('app'));
+export default App;

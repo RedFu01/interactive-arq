@@ -1,4 +1,3 @@
-import { SettingsBackupRestoreRounded } from '@material-ui/icons';
 import React from 'react';
 import * as d3 from 'd3';
 import './MessageSequenceChart.scss';

@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/RedFu01/interactive-arqstatic/css/main.5852278c.css",
+    "main.js": "/RedFu01/interactive-arqstatic/js/main.b160be26.js",
+    "index.html": "/RedFu01/interactive-arqindex.html",
+    "main.5852278c.css.map": "/RedFu01/interactive-arqstatic/css/main.5852278c.css.map",
+    "main.b160be26.js.map": "/RedFu01/interactive-arqstatic/js/main.b160be26.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5852278c.css",
+    "static/js/main.b160be26.js"
+  ]
+}
