@@ -1,32 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
-import {
-    Chart,
-    Series,
-    ArgumentAxis,
-    ValueAxis,
-    Legend,
-    Crosshair,
-    Label,
-    HorizontalLine,
-    CommonAxisSettings,
-} from 'devextreme-react/chart';
-
 import Nav from '../components/Nav/Nav';
 import MessageSequenceChart from '../components/MessageSequenceChart/MessageSequenceChart';
-
-
-const crosshairFormat = {
-    type: 'fixedPoint',
-    precision: 2
-};
-
 
 export default class ArqPerformance extends React.Component {
     constructor(props) {
@@ -64,7 +42,7 @@ export default class ArqPerformance extends React.Component {
             data.push({
                 per,
                 y_saw,
-                y_gbn: per == 0 ? o : y_gbn,
+                y_gbn: per === 0 ? o : y_gbn,
                 y_sr
             });
         }

@@ -7,9 +7,7 @@ const LinkTab = (props) => {
     return (
         <Tab
             component="a"
-            onClick={(event) => {
-                //event.preventDefault();
-            }}
+            onClick={() => {}}
             {...props}
         />
     );
@@ -17,8 +15,6 @@ const LinkTab = (props) => {
 
 const Nav = () => {
     const path = window.location.pathname;
-
-    console.log(path)
     const value = path === '/utilization' ? 1 : 0;
     return (
         <Paper elevation={3}>
